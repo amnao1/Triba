@@ -1,0 +1,240 @@
+
+  	
+
+  	window.onload = function(){
+  		var canvas = document.getElementById("nasKanvas");
+	  	var ctx = canvas.getContext("2d");
+	     var points = [];
+	     var clicked = [];
+	     var triangles = [];
+	     var validS = false;
+	     var validM = false;
+	     var validE = false;
+	     var indexS = -1;
+	     var indexM = -1;
+	     var indexE = -1;
+	     var point = function(x,y){
+              this.x = x;
+              this.y = y;
+              return this;
+          };
+	     let clicks = 0;
+	  	for(let i=1; i<9; i++){
+	  		for(let j=1; j<11; j++){
+	  			ctx.beginPath();
+
+	  			ctx.arc(i*70, j*60, 8, 0, 2 * Math.PI);
+	  			points.push(new point(i*70, j*60));
+	  			clicked.push(0);
+	  		     ctx.fillStyle = 'green';
+	  		     ctx.fill();
+	  			ctx.stroke();
+	  			ctx.closePath();
+
+  		    }
+        	}
+  	    
+              
+          
+         
+          var triangle = function(a, b, c){
+              this.a = a;
+              this.b = b;
+              this.c = c;
+              return this;
+          };
+		function init(){
+               clicks = 0;
+               validS = false;
+	          validM = false;
+	          validE = false;
+	          indexS = -1;
+	          indexM = -1;
+	          indexE = -1;
+		}
+		function isThereMorePoints(indexS, indexM, indexE){
+			var indexi = [indexS, indexM, indexE];
+			indexi = indexi.sort();
+			
+               for(var i=indexi[0]; i<indexi[1]; i++){
+                      if(colinear(points[indexi[0]], points[i], points[indexi[1]])){
+                      	clicked[i] = 1;
+                    }
+               }
+               
+               for(var i=indexi[1]; i<indexi[2]; i++){
+                      if(colinear(points[indexi[1]], points[i], points[indexi[2]])){
+                      	clicked[i] = 1;
+                    }
+               }
+
+               for(var i=indexi[0]; i<indexi[2]; i++){
+                      if(colinear(points[indexi[0]], points[i], points[indexi[2]])){
+                      	clicked[i] = 1;
+                    }
+               }
+          }
+		
+		function validPoint(x, y){
+		    var valid = false;
+              for (var i = 0; i < points.length; i++) {
+		          if(((((x-points[i].x)*(x-points[i].x))+((y-points[i].y)*(y-points[i].y)))<=70)){
+		            if (clicked[i] == 0){
+			          x = points[i].x;
+			          y = points[i].y;
+			          clicked[i] = 1;
+			          valid = true;   
+		            }
+		            index = i;
+		          }
+		     }
+		     let p = new point(x, y)
+	          return [p, valid, index]; 
+		}
+		function validTriangle(start, middle, end){
+			var valid = true;
+               if(colinear(start, middle, end)){
+			    	valid = false;
+			}
+			if(triangles.length != 0){
+		     	for(var i = 0; i<triangles.length; i++){
+		     		if(checkIfTrianglesIntersect(triangles[i], [start, middle, end])){
+                            valid = false;
+		     		}
+		     	}
+		     }
+		     return valid;
+		}
+		canvas.addEventListener("mousedown", e => {
+		    let cX = canvas.getBoundingClientRect().left;
+		    let cY = canvas.getBoundingClientRect().top;
+		    clicks++;
+		    var x = e.clientX - cX;
+		    var y = e.clientY - cY;
+		    var rez = validPoint(x, y);
+	          
+		     if (clicks == 1) {
+		        
+                  indexS = rez[2];
+                  validS = rez[1];
+		    	   start = rez[0];
+		    	   
+		     }else if(clicks == 2){
+		        
+                  indexM = rez[2];
+                  validM = rez[1];
+		    	   middle = rez[0];
+		     }else if(clicks == 3){
+		        
+                  indexE = rez[2];
+                  validE = rez[1];
+		    	   end = rez[0]; 
+		    	    
+		    	   console.log(indexS+" "+indexM+" "+indexE);
+		    	   console.log(validS+" "+validM+" "+validE);
+		    	   if((validS && validM) && validE){
+                       
+                       
+			    	   if(validTriangle(start, middle, end)){
+			    	   	drawTriangle();
+			    	   	isThereMorePoints(indexS, indexM, indexE);
+				     triangles.push([start,middle,end]);
+				     init();
+			    	   }else{
+			    	   	alert("Tacke ne cine trougao ili se trougao sijece sa drugim trouglom!");
+			    	   	clicked[indexM]=0;
+	             	     clicked[indexS]=0;
+	             	     clicked[indexE]=0;
+			    	   	init();
+			    	   }
+	             }else if(validS && validM && !validE){
+		             	clicked[indexS]=0;
+		             	clicked[indexM]=0;
+		             	alert("Kliknuli ste tačku ili tačke koje su već uzete.");
+		             	init();
+		             	
+	             }else if(validS && !validM && validE){
+	             	     clicked[indexS]=0;
+		             	clicked[indexE]=0;
+		             	alert("Kliknuli ste tačku ili tačke koje su već uzete.");
+		             	init();
+	             }else if(!validS && validM && validE){
+	             	     clicked[indexM]=0;
+		             	clicked[indexE]=0;
+		             	alert("Kliknuli ste tačku ili tačke koje su već uzete.");
+		             	init();
+	             }else if((!validS) && (!validM) && validE){
+	             	     clicked[indexE]=0;
+	             	     alert("Kliknuli ste tačku ili tačke koje su već uzete.");
+	             	     init();
+	             }else if(validS && !validM && !validE){
+	             	     clicked[indexS]=0;
+	             	     alert("Kliknuli ste tačku ili tačke koje su već uzete.");
+	             	     init();
+	             }else if(!validS && validM && !validE){
+	             	     clicked[indexM]=0;
+	             	     alert("Kliknuli ste tačku ili tačke koje su već uzete.");
+	             	     init();
+	             }else if(!validS && !validM && !validE){
+	             	     clicked[indexM]=0;
+	             	     clicked[indexS]=0;
+	             	     clicked[indexE]=0;
+	             	     alert("Kliknuli ste tačku ili tačke koje su već uzete.");
+	             	     init();
+	             }
+
+		     }
+		});
+
+       
+
+		function drawTriangle() {
+	   
+		    ctx.beginPath();
+		    ctx.strokeStyle = "black";
+		    ctx.lineWidth = 1;
+		    ctx.moveTo(start.x, start.y);
+		    ctx.lineTo(middle.x, middle.y);
+		    ctx.lineTo(end.x, end.y);
+		    ctx.lineTo(start.x, start.y);
+		    ctx.stroke();
+		    ctx.closePath();
+		}
+		function colinear(a, b, c){
+              return ((b.y-a.y) * (c.x-b.x) == (c.y-b.y) * (b.x-a.x));
+		}
+          
+          function orientation (point1, point2, point3){
+          	return (((point3.y-point1.y) * (point2.x-point1.x)) > ((point2.y-point1.y) * (point3.x-point1.x)));
+          }
+          function checkIfLinesIntersect(line1, line2){
+          	
+               if(orientation(line1[0],line1[1],line2[0]) != orientation(line1[0],line1[1],line2[1]) && 
+               	orientation(line2[0],line2[1],line1[0]) != orientation(line2[0],line2[1],line1[1])){
+               	return true;
+               }
+          }
+		function checkIfTrianglesIntersect(triangle1, triangle2) {
+	          for(var i=0; i<3; i++){
+	          	for(var j=0; j<3; j++){
+	          		if(checkIfLinesIntersect([triangle1[i], triangle1[(i+1)%3]], [triangle2[j], triangle2[(j+1)%3]])){
+	          			return true;
+	          		}
+	               }
+	          }
+	          return false; 
+		}
+		function checkIfPointIsOnTriangle(point, triangle1){
+			var coli = false;
+			if(colinear(triangle1[0], point, triangle1[1])){
+                  coli = true;
+			}else if(colinear(triangle1[1], point, triangle1[2])){
+			   coli = true;
+			}else if(colinear(triangle1[2], point, triangle1[0])){
+			   coli = true;
+			}
+			return coli;
+		}
+
+  	}
+  

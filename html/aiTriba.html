@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Triba</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="../css/Triba.css">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+
+<div class="w3-top">
+  <div class="w3-bar w3-teal w3-card" id="myNavbar">
+    <div class="w3-right w3-hide-small">
+      <a href="Home.html" class="w3-bar-item w3-button"><i class="fa fa-home"></i> Početna</a>
+      <a href="Triba.html" id="protivPR" onclick="w3_close()" class="w3-bar-item w3-button"><i class="fa fa-user"></i> Protiv prijatelja</a>
+    </div>
+  </div>
+</div>
+
+<div class="bg"></div>
+<div class="bg bg2"></div>
+<div class="bg bg3"></div>
+
+<div class="w3-container" style="padding:228px 16px" id="razine">
+ 
+  <div class="w3-row-padding" style="margin-top:64px; margin-left: 250px;">
+    <div class="w3-col l3 w3-margin-bottom">
+        <div class="w3-center">
+        </div>
+    </div>
+    <div class="w3-col l3 w3-margin-bottom">
+        <div class="w3-center box">
+          <p>Odaberi veličinu ploče: </p>
+          <a href="#ploca" id="btn1" onclick="startGameAI(8, 10, 650, 650)" class="w3-button w3-teal w3-border w3-border-white w3-round-large" style="margin: 10px">10x8 veličina ploče</a>
+          <a href="#ploca" id="btn2" onclick="startGameAI(6, 8, 550, 500)" class="w3-button w3-teal w3-border w3-border-white w3-round-large" style="margin: 10px">8x6 veličina ploče</a>
+          <a href="#ploca" id="btn3" onclick="startGameAI(4, 6, 430, 350)" class="w3-button w3-teal w3-border w3-border-white w3-round-large" style="margin: 10px">6x4 veličina ploče</a>
+        </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="grid-container" id="ploca">
+  <div class="grid-item">
+     <div id="vll"></div>
+  </div>
+  <div class="grid-item">
+    <canvas id="kanvas" width="650px" height="650px"></canvas>
+  </div>
+  <div class="grid-item">
+     <div id="vlr"></div>
+  </div>
+  <div class="grid-item"></div>
+  <div class="grid-item">
+    <a href="aiTriba.html" id="btn3" class="w3-button w3-teal w3-border w3-border-white w3-round-large" style="margin: 10px;">Nova igra!</a>
+  </div>
+</div>
+
+
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p id="text">Igra je završena. Pobjednik je  <i id="igrac" class="fa fa-circle" style="color: 'green'"></i>  igrač!</p>
+  </div>
+
+</div>
+
+
+<!-- Footer -->
+<footer class="w3-center w3-white w3-padding-64">
+  <a href="#home" class="w3-button w3-light-grey"><i class="fa fa-arrow-up w3-margin-right"></i>Idi na vrh</a>
+  <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" class="w3-hover-text-green">w3.css</a></p>
+</footer>
+ 
+<script type="text/javascript" src="../js/aiTriba.js"></script>
+
+</body>
+</html>
